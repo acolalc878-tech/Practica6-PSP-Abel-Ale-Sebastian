@@ -19,10 +19,12 @@ public class PanelDeCarreraGlobos extends JPanel {
         globos = new ArrayList<>();
         clasificacion = new ArrayList<>();
         techo = new Techo();
-        iniciarGlobos();
     }
 
-    private void iniciarGlobos() {
+    public void iniciarCarrera() {
+        globos.clear();
+        clasificacion.clear();
+        carreraTerminada = false;
         globos.add(new Globo(200, 500, 40, Color.RED, this));
         globos.add(new Globo(300, 500, 40, Color.BLUE, this));
         globos.add(new Globo(400, 500, 40, Color.GREEN, this));
@@ -31,6 +33,7 @@ public class PanelDeCarreraGlobos extends JPanel {
         for (Globo globo : globos) {
             globo.start();
         }
+        repaint();
     }
 
     @Override
@@ -39,7 +42,7 @@ public class PanelDeCarreraGlobos extends JPanel {
         setBackground(Color.CYAN);
 
         g.setColor(Color.GRAY);
-        g.fillRect(0, techo.getY(), getWidth(), 10); // Dibujar techo
+        g.fillRect(0, techo.getY(), getWidth(), 10);
 
         for (Globo globo : globos) {
             g.setColor(globo.getColor());

@@ -16,5 +16,4 @@ public class CarreraGlobos extends JFrame {
         PanelDeCarreraGlobos panel = new PanelDeCarreraGlobos();
         add(panel);
     }
-
 }

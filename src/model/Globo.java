@@ -8,7 +8,7 @@ public class Globo extends Thread {
     private int x, y;
     private final int tamaño;
     private final Color color;
-    private boolean corriendo = true;
+    private boolean corriendo = false;
     private final PanelDeCarreraGlobos panel;
 
     public Globo(int x, int y, int tamaño, Color color, PanelDeCarreraGlobos panel) {
@@ -21,9 +21,10 @@ public class Globo extends Thread {
 
     @Override
     public void run() {
-        while (corriendo && y > 50) { // Se mueve hacia arriba
+        corriendo = true;
+        while (corriendo && y > 50) {
             y -= 5;
-            x += (Math.random() > 0.5) ? 1 : -1; // Balanceo
+            x += (Math.random() > 0.5) ? 1 : -1;
             panel.repaint();
             try {
                 Thread.sleep((int) (Math.random() * 15 + 15));
@@ -43,3 +44,4 @@ public class Globo extends Thread {
     public int getTamaño() { return tamaño; }
     public Color getColor() { return color; }
 }
+
