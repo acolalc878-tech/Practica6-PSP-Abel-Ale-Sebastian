@@ -1,4 +1,6 @@
-package src.animacion5_carrera;
+package src.model;
+
+import src.view.PanelDeCarreraGlobos;
 
 import java.awt.*;
 

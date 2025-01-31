@@ -1,4 +1,4 @@
-package src.animacion5_carrera;
+package src.model;
 
 public class Techo {
     private final int y = 50;

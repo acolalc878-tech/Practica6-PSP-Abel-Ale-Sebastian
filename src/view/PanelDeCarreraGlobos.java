@@ -1,4 +1,7 @@
-package src.animacion5_carrera;
+package src.view;
+
+import src.model.Globo;
+import src.model.Techo;
 
 import javax.swing.*;
 import java.awt.Color;

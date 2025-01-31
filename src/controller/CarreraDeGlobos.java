@@ -1,6 +1,6 @@
-package src.animacion5_carrera;
+package src.controller;
 
-import src.animacion5_carrera.PanelDeCarreraGlobos;
+import src.view.PanelDeCarreraGlobos;
 
 import javax.swing.*;
 
