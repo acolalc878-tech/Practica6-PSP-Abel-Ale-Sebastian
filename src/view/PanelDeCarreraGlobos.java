@@ -30,10 +30,11 @@ public class PanelDeCarreraGlobos extends JPanel {
         techo = new Techo();
 
         // Cargar las imágenes
-        imagenGloboRojo = new ImageIcon(getClass().getResource("src/Images/Globo_Amarillo-removebg-preview.png")).getImage();
-        imagenGloboAzul = new ImageIcon(getClass().getResource("src/Images/Globo_Rojo-removebg-preview.png")).getImage();
-        imagenGloboVerde = new ImageIcon(getClass().getResource("src/Images/Globo_Verde-removebg-preview.png")).getImage();
-        imagenGloboAmarillo = new ImageIcon(getClass().getResource("src/Images/Globo_Azul-removebg-preview.png")).getImage();
+        imagenGloboRojo = new ImageIcon(getClass().getResource("/controller/imagen/Globo_Rojo-removebg-preview.png")).getImage();
+        imagenGloboAzul = new ImageIcon(getClass().getResource("/controller/imagen/Globo_Azul-removebg-preview.png")).getImage();
+        imagenGloboVerde = new ImageIcon(getClass().getResource("/controller/imagen/Globo_Verde-removebg-preview.png")).getImage();
+        imagenGloboAmarillo = new ImageIcon(getClass().getResource("/controller/imagen/Globo_Amarillo-removebg-preview.png")).getImage();
+
     }
 
     public void iniciarCarrera() {
