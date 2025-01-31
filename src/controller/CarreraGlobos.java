@@ -1,7 +1,6 @@
 package src.controller;
 
-
-import src.animacion5_carrera.PanelDeCarrera;
+import src.view.PanelDeCarreraGlobos;
 
 import javax.swing.*;
 
@@ -14,7 +13,7 @@ public class CarreraGlobos extends JFrame {
         setLocationRelativeTo(null);
         setResizable(false);
 
-        PanelDeCarrera panel = new PanelDeCarrera();
+        PanelDeCarreraGlobos panel = new PanelDeCarreraGlobos();
         add(panel);
     }
 
