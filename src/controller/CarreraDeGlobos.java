@@ -8,7 +8,7 @@ import java.awt.*;
 public class CarreraDeGlobos extends JFrame {
     public CarreraDeGlobos() {
         setTitle("Carrera de Globos");
-        setSize(800, 600);
+        setSize(350, 800);
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         setLocationRelativeTo(null);
         setResizable(false);

@@ -1,15 +1,17 @@
 package src.model;
 
 import src.view.PanelDeCarreraGlobos;
-
-import java.awt.*;
+import java.awt.Color;
 
 public class Globo extends Thread {
-    private int x, y;
+    private int x;
+    private int y;
     private final int tamaño;
     private final Color color;
-    private boolean corriendo = false;
     private final PanelDeCarreraGlobos panel;
+    private boolean corriendo = true;
+    private int velocidad = 3;
+    private boolean pausado = false;
 
     public Globo(int x, int y, int tamaño, Color color, PanelDeCarreraGlobos panel) {
         this.x = x;
@@ -21,13 +23,14 @@ public class Globo extends Thread {
 
     @Override
     public void run() {
-        corriendo = true;
-        while (corriendo && y > 50) {
-            y -= 5;
-            x += (Math.random() > 0.5) ? 1 : -1;
-            panel.repaint();
+        while (corriendo && y > 50) { // Se mueve mientras no llega al techo
+            if (!pausado) {
+                y -= velocidad; // Movimiento hacia arriba
+                panel.repaint();
+            }
+
             try {
-                Thread.sleep((int) (Math.random() * 15 + 15));
+                Thread.sleep(50); // Control de velocidad
             } catch (InterruptedException e) {
                 e.printStackTrace();
             }
@@ -35,8 +38,22 @@ public class Globo extends Thread {
         panel.registrarLlegada(this);
     }
 
-    public void detener() {
-        corriendo = false;
+    public boolean contienePunto(int px, int py) {
+        return px >= x && px <= x + tamaño && py >= y && py <= y + tamaño;
+    }
+
+    public void pausarMedioSegundo() {
+        if (!pausado) {
+            pausado = true;
+            new Thread(() -> {
+                try {
+                    Thread.sleep(500);
+                } catch (InterruptedException e) {
+                    e.printStackTrace();
+                }
+                pausado = false;
+            }).start();
+        }
     }
 
     public int getX() { return x; }
@@ -44,4 +61,3 @@ public class Globo extends Thread {
     public int getTamaño() { return tamaño; }
     public Color getColor() { return color; }
 }
-
