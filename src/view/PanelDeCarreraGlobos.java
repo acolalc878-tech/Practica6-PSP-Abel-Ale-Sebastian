@@ -30,10 +30,10 @@ public class PanelDeCarreraGlobos extends JPanel {
         techo = new Techo();
 
         // Cargar las imágenes
-        imagenGloboRojo = new ImageIcon(getClass().getResource("/controller/imagen/Globo_Rojo-removebg-preview.png")).getImage();
-        imagenGloboAzul = new ImageIcon(getClass().getResource("/controller/imagen/Globo_Azul-removebg-preview.png")).getImage();
-        imagenGloboVerde = new ImageIcon(getClass().getResource("/controller/imagen/Globo_Verde-removebg-preview.png")).getImage();
-        imagenGloboAmarillo = new ImageIcon(getClass().getResource("/controller/imagen/Globo_Amarillo-removebg-preview.png")).getImage();
+        imagenGloboAzul = new ImageIcon(getClass().getResource("/src/imagen/GloboAzul.png")).getImage();
+        imagenGloboVerde= new ImageIcon(getClass().getResource("/src/imagen/GloboVerde.png")).getImage();
+        imagenGloboRojo = new ImageIcon(getClass().getResource("/src/imagen/GloboRojo.png")).getImage();
+        imagenGloboAmarillo = new ImageIcon(getClass().getResource("/src/imagen/GloboAmarillo.png")).getImage();
 
     }
 
@@ -45,11 +45,16 @@ public class PanelDeCarreraGlobos extends JPanel {
         clasificacion.clear();
         carreraTerminada = false;
 
-        int startY = getHeight() - 100; // Ajuste para que inicien abajo
-        globos.add(new Globo(100, startY, 40, Color.RED, this));
-        globos.add(new Globo(160, startY, 40, Color.BLUE, this));
-        globos.add(new Globo(220, startY, 40, Color.GREEN, this));
-        globos.add(new Globo(280, startY, 40, Color.YELLOW, this));
+        int startY = getHeight() - 40; // Ajuste para que inicien abajo
+
+        // Ajustar las posiciones x de los globos
+        int separacion = 80; // Reducir la separación entre globos
+        int inicioX = 30; // Mover los globos un poco más a la izquierda
+
+        globos.add(new Globo(inicioX, startY, 40, Color.RED, this));
+        globos.add(new Globo(inicioX + separacion, startY, 40, Color.BLUE, this));
+        globos.add(new Globo(inicioX + 2 * separacion, startY, 40, Color.GREEN, this));
+        globos.add(new Globo(inicioX + 3 * separacion, startY, 40, Color.YELLOW, this));
 
         for (Globo globo : globos) {
             globo.start();
@@ -83,26 +88,43 @@ public class PanelDeCarreraGlobos extends JPanel {
         super.paintComponent(g);
         setBackground(Color.CYAN);
 
+        techo.dibujar(g, getWidth());
+
         // Dibujar el techo en la parte superior
         g.setColor(Color.GRAY);
         g.fillRect(0, techo.getY(), getWidth(), 10);
 
-        // Dibujar los globos usando imágenes
+        // Dibujar los globos o la explosión
         for (Globo globo : globos) {
-            switch (globo.getColor().toString()) {
-                case "java.awt.Color[r=255,g=0,b=0]": // Rojo
-                    g.drawImage(imagenGloboRojo, globo.getX(), globo.getY(), globo.getTamaño(), globo.getTamaño(), this);
-                    break;
-                case "java.awt.Color[r=0,g=0,b=255]": // Azul
-                    g.drawImage(imagenGloboAzul, globo.getX(), globo.getY(), globo.getTamaño(), globo.getTamaño(), this);
-                    break;
-                case "java.awt.Color[r=0,g=255,b=0]": // Verde
-                    g.drawImage(imagenGloboVerde, globo.getX(), globo.getY(), globo.getTamaño(), globo.getTamaño(), this);
-                    break;
-                case "java.awt.Color[r=255,g=255,b=0]": // Amarillo
-                    g.drawImage(imagenGloboAmarillo, globo.getX(), globo.getY(), globo.getTamaño(), globo.getTamaño(), this);
-                    break;
+            if (globo.isExplotado() && !globo.isAnimacionCompletada()) {
+                // Dibujar la imagen de explosión actual con un tamaño más grande
+                int tamañoExplosion = (int) (globo.getTamaño() * 1.5); // 1.5 veces más grande
+                g.drawImage(
+                        globo.getImagenExplosionActual(),
+                        globo.getX() - (tamañoExplosion - globo.getTamaño()) / 2, // Centrar la explosión
+                        globo.getY() - (tamañoExplosion - globo.getTamaño()) / 2, // Centrar la explosión
+                        tamañoExplosion,
+                        tamañoExplosion,
+                        this
+                );
+            } else if (!globo.isExplotado()) {
+                // Dibujar el globo
+                switch (globo.getColor().toString()) {
+                    case "java.awt.Color[r=255,g=0,b=0]": // Rojo
+                        g.drawImage(imagenGloboRojo, globo.getX(), globo.getY(), globo.getTamaño(), globo.getTamaño(), this);
+                        break;
+                    case "java.awt.Color[r=0,g=0,b=255]": // Azul
+                        g.drawImage(imagenGloboAzul, globo.getX(), globo.getY(), globo.getTamaño(), globo.getTamaño(), this);
+                        break;
+                    case "java.awt.Color[r=0,g=255,b=0]": // Verde
+                        g.drawImage(imagenGloboVerde, globo.getX(), globo.getY(), globo.getTamaño(), globo.getTamaño(), this);
+                        break;
+                    case "java.awt.Color[r=255,g=255,b=0]": // Amarillo
+                        g.drawImage(imagenGloboAmarillo, globo.getX(), globo.getY(), globo.getTamaño(), globo.getTamaño(), this);
+                        break;
+                }
             }
+            // Si la animación ha terminado, no dibujamos nada (el globo desaparece)
         }
     }
 
