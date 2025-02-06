@@ -19,6 +19,13 @@ public class Globo extends Thread {
     private int frameActual = 0; // Índice de la imagen actual de la explosión
     private boolean animacionCompletada = false; // Indica si la animación ha terminado
 
+    // Nuevas variables para la animación de viento
+    private Image[] imagenesVientoIzquierda; // Array para las imágenes de viento izquierdo
+    private Image[] imagenesVientoDerecha; // Array para las imágenes de viento derecho
+    private int frameVientoActual = 0; // Índice de la imagen actual de viento
+    private boolean animacionVientoActiva = false; // Indica si la animación de viento está activa
+    private boolean vientoDerecha = false; // Indica si el viento es a la derecha
+
     public Globo(int x, int y, int tamaño, Color color, PanelDeCarreraGlobos panel) {
         this.x = x;
         this.y = y;
@@ -26,6 +33,8 @@ public class Globo extends Thread {
         this.color = color;
         this.panel = panel;
         this.imagenesExplosion = cargarImagenesExplosion(); // Cargar las imágenes de explosión
+        this.imagenesVientoIzquierda = cargarImagenesVientoIzquierda(); // Cargar las imágenes de viento izquierdo
+        this.imagenesVientoDerecha = cargarImagenesVientoDerecha(); // Cargar las imágenes de viento derecho
     }
 
     private Image[] cargarImagenesExplosion() {
@@ -33,6 +42,24 @@ public class Globo extends Thread {
         String colorNombre = obtenerNombreColor(color).toLowerCase(); // Obtener el nombre del color en minúsculas
         for (int i = 0; i < 6; i++) {
             String ruta = "/src/imagen/Explosion" + colorNombre + (i + 1) + ".png";
+            imagenes[i] = new ImageIcon(getClass().getResource(ruta)).getImage();
+        }
+        return imagenes;
+    }
+
+    private Image[] cargarImagenesVientoIzquierda() {
+        Image[] imagenes = new Image[4];
+        for (int i = 0; i < 4; i++) {
+            String ruta = "/src/imagen/VientoIzquierda" + (i + 1) + ".png";
+            imagenes[i] = new ImageIcon(getClass().getResource(ruta)).getImage();
+        }
+        return imagenes;
+    }
+
+    private Image[] cargarImagenesVientoDerecha() {
+        Image[] imagenes = new Image[4];
+        for (int i = 0; i < 4; i++) {
+            String ruta = "/src/imagen/VientoDerecha" + (i + 1) + ".png";
             imagenes[i] = new ImageIcon(getClass().getResource(ruta)).getImage();
         }
         return imagenes;
@@ -48,10 +75,20 @@ public class Globo extends Thread {
 
     @Override
     public void run() {
+        long ultimoViento = System.currentTimeMillis(); // Tiempo de la última animación de viento
+
         while (corriendo && y > 50) {
             if (!pausado) {
                 y -= velocidad;
                 panel.repaint();
+            }
+
+            // Activar la animación de viento cada 2 segundos
+            if (System.currentTimeMillis() - ultimoViento >= 2000) {
+                ultimoViento = System.currentTimeMillis(); // Reiniciar el contador
+                animacionVientoActiva = true;
+                vientoDerecha = !vientoDerecha; // Alternar entre izquierda y derecha
+                new Thread(this::animarViento).start(); // Ejecutar la animación en un hilo separado
             }
 
             try {
@@ -67,6 +104,20 @@ public class Globo extends Thread {
             animarExplosion();
         }
         panel.registrarLlegada(this);
+    }
+
+    private void animarViento() {
+        for (int i = 0; i < 4; i++) { // 4 frames de animación
+            frameVientoActual = i; // Cambiar el frame de la animación
+            panel.repaint(); // Forzar repintado para mostrar el nuevo frame
+
+            try {
+                Thread.sleep(120); // Ajusta este valor para controlar la velocidad de la animación
+            } catch (InterruptedException e) {
+                e.printStackTrace();
+            }
+        }
+        animacionVientoActiva = false; // Desactivar la animación de viento
     }
 
     private void animarExplosion() {
@@ -109,4 +160,9 @@ public class Globo extends Thread {
     public boolean isExplotado() { return explotado; }
     public boolean isAnimacionCompletada() { return animacionCompletada; }
     public Image getImagenExplosionActual() { return imagenesExplosion[frameActual]; }
+    public boolean isAnimacionVientoActiva() { return animacionVientoActiva; }
+    public Image getImagenVientoActual() {
+        return vientoDerecha ? imagenesVientoDerecha[frameVientoActual] : imagenesVientoIzquierda[frameVientoActual];
+    }
+    public boolean isVientoDerecha() { return vientoDerecha; }
 }

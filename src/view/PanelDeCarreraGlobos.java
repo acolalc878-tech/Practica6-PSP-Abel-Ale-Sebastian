@@ -34,7 +34,6 @@ public class PanelDeCarreraGlobos extends JPanel {
         imagenGloboVerde= new ImageIcon(getClass().getResource("/src/imagen/GloboVerde.png")).getImage();
         imagenGloboRojo = new ImageIcon(getClass().getResource("/src/imagen/GloboRojo.png")).getImage();
         imagenGloboAmarillo = new ImageIcon(getClass().getResource("/src/imagen/GloboAmarillo.png")).getImage();
-
     }
 
     public void iniciarCarrera() {
@@ -124,7 +123,32 @@ public class PanelDeCarreraGlobos extends JPanel {
                         break;
                 }
             }
-            // Si la animación ha terminado, no dibujamos nada (el globo desaparece)
+
+            // Dibujar la animación de viento si está activa
+            if (globo.isAnimacionVientoActiva()) {
+                int tamañoViento = (int) (globo.getTamaño() * 0.7); // Tamaño del viento un 30% más pequeño
+                if (globo.isVientoDerecha()) {
+                    // Dibujar viento a la derecha
+                    g.drawImage(
+                            globo.getImagenVientoActual(),
+                            globo.getX() + globo.getTamaño(), // Posición a la derecha del globo
+                            globo.getY() + (globo.getTamaño() - tamañoViento) / 2, // Centrar verticalmente
+                            tamañoViento,
+                            tamañoViento,
+                            this
+                    );
+                } else {
+                    // Dibujar viento a la izquierda
+                    g.drawImage(
+                            globo.getImagenVientoActual(),
+                            globo.getX() - tamañoViento, // Posición a la izquierda del globo
+                            globo.getY() + (globo.getTamaño() - tamañoViento) / 2, // Centrar verticalmente
+                            tamañoViento,
+                            tamañoViento,
+                            this
+                    );
+                }
+            }
         }
     }
 
