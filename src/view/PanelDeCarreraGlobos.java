@@ -23,23 +23,18 @@ public class PanelDeCarreraGlobos extends JPanel {
     private Image imagenGloboVerde;
     private Image imagenGloboAmarillo;
 
-    // Nueva variable para el fondo, que sustituye al color
-    private Image fondoPro;
-
     public PanelDeCarreraGlobos() {
         setPreferredSize(new Dimension(400, 750)); // Panel vertical
         globos = new ArrayList<>();
         clasificacion = new ArrayList<>();
         techo = new Techo();
 
-        // Cargar las imágenes de los globos
-        imagenGloboAzul = new ImageIcon(getClass().getResource("/src/imagen/GloboAzul.png")).getImage();
-        imagenGloboVerde = new ImageIcon(getClass().getResource("/src/imagen/GloboVerde.png")).getImage();
-        imagenGloboRojo = new ImageIcon(getClass().getResource("/src/imagen/GloboRojo.png")).getImage();
-        imagenGloboAmarillo = new ImageIcon(getClass().getResource("/src/imagen/GloboAmarillo.png")).getImage();
+        // Cargar las imágenes
+        imagenGloboRojo = new ImageIcon(getClass().getResource("/controller/imagen/Globo_Rojo-removebg-preview.png")).getImage();
+        imagenGloboAzul = new ImageIcon(getClass().getResource("/controller/imagen/Globo_Azul-removebg-preview.png")).getImage();
+        imagenGloboVerde = new ImageIcon(getClass().getResource("/controller/imagen/Globo_Verde-removebg-preview.png")).getImage();
+        imagenGloboAmarillo = new ImageIcon(getClass().getResource("/controller/imagen/Globo_Amarillo-removebg-preview.png")).getImage();
 
-        // Cargar la imagen de fondo (fondoPro.png)
-        fondoPro = new ImageIcon(getClass().getResource("/src/imagen/fondoPro.png")).getImage();
     }
 
     public void iniciarCarrera() {
@@ -50,16 +45,11 @@ public class PanelDeCarreraGlobos extends JPanel {
         clasificacion.clear();
         carreraTerminada = false;
 
-        int startY = getHeight() - 40; // Ajuste para que inicien abajo
-
-        // Ajustar las posiciones x de los globos
-        int separacion = 80; // Reducir la separación entre globos
-        int inicioX = 30; // Mover los globos un poco más a la izquierda
-
-        globos.add(new Globo(inicioX, startY, 40, Color.RED, this));
-        globos.add(new Globo(inicioX + separacion, startY, 40, Color.BLUE, this));
-        globos.add(new Globo(inicioX + 2 * separacion, startY, 40, Color.GREEN, this));
-        globos.add(new Globo(inicioX + 3 * separacion, startY, 40, Color.YELLOW, this));
+        int startY = getHeight() - 100; // Ajuste para que inicien abajo
+        globos.add(new Globo(100, startY, 40, Color.RED, this));
+        globos.add(new Globo(160, startY, 40, Color.BLUE, this));
+        globos.add(new Globo(220, startY, 40, Color.GREEN, this));
+        globos.add(new Globo(280, startY, 40, Color.YELLOW, this));
 
         for (Globo globo : globos) {
             globo.start();
@@ -91,72 +81,27 @@ public class PanelDeCarreraGlobos extends JPanel {
     @Override
     protected void paintComponent(Graphics g) {
         super.paintComponent(g);
-
-        // Dibujar el fondo utilizando la imagen fondoPro.png
-        g.drawImage(fondoPro, 0, 0, getWidth(), getHeight(), this);
-
-        // Dibujar el techo y las nubes
-        techo.dibujar(g, getWidth());
+        setBackground(Color.CYAN);
 
         // Dibujar el techo en la parte superior
         g.setColor(Color.GRAY);
         g.fillRect(0, techo.getY(), getWidth(), 10);
 
-        // Dibujar los globos o la explosión
+        // Dibujar los globos usando imágenes
         for (Globo globo : globos) {
-            if (globo.isExplotado() && !globo.isAnimacionCompletada()) {
-                // Dibujar la imagen de explosión actual con un tamaño más grande
-                int tamañoExplosion = (int) (globo.getTamaño() * 1.5); // 1.5 veces más grande
-                g.drawImage(
-                        globo.getImagenExplosionActual(),
-                        globo.getX() - (tamañoExplosion - globo.getTamaño()) / 2, // Centrar la explosión
-                        globo.getY() - (tamañoExplosion - globo.getTamaño()) / 2, // Centrar la explosión
-                        tamañoExplosion,
-                        tamañoExplosion,
-                        this
-                );
-            } else if (!globo.isExplotado()) {
-                // Dibujar el globo
-                switch (globo.getColor().toString()) {
-                    case "java.awt.Color[r=255,g=0,b=0]": // Rojo
-                        g.drawImage(imagenGloboRojo, globo.getX(), globo.getY(), globo.getTamaño(), globo.getTamaño(), this);
-                        break;
-                    case "java.awt.Color[r=0,g=0,b=255]": // Azul
-                        g.drawImage(imagenGloboAzul, globo.getX(), globo.getY(), globo.getTamaño(), globo.getTamaño(), this);
-                        break;
-                    case "java.awt.Color[r=0,g=255,b=0]": // Verde
-                        g.drawImage(imagenGloboVerde, globo.getX(), globo.getY(), globo.getTamaño(), globo.getTamaño(), this);
-                        break;
-                    case "java.awt.Color[r=255,g=255,b=0]": // Amarillo
-                        g.drawImage(imagenGloboAmarillo, globo.getX(), globo.getY(), globo.getTamaño(), globo.getTamaño(), this);
-                        break;
-                }
-            }
-
-            // Dibujar la animación de viento si está activa
-            if (globo.isAnimacionVientoActiva()) {
-                int tamañoViento = (int) (globo.getTamaño() * 0.7); // Tamaño del viento un 30% más pequeño
-                if (globo.isVientoDerecha()) {
-                    // Dibujar viento a la derecha
-                    g.drawImage(
-                            globo.getImagenVientoActual(),
-                            globo.getX() + globo.getTamaño(), // Posición a la derecha del globo
-                            globo.getY() + (globo.getTamaño() - tamañoViento) / 2, // Centrar verticalmente
-                            tamañoViento,
-                            tamañoViento,
-                            this
-                    );
-                } else {
-                    // Dibujar viento a la izquierda
-                    g.drawImage(
-                            globo.getImagenVientoActual(),
-                            globo.getX() - tamañoViento, // Posición a la izquierda del globo
-                            globo.getY() + (globo.getTamaño() - tamañoViento) / 2, // Centrar verticalmente
-                            tamañoViento,
-                            tamañoViento,
-                            this
-                    );
-                }
+            switch (globo.getColor().toString()) {
+                case "java.awt.Color[r=255,g=0,b=0]": // Rojo
+                    g.drawImage(imagenGloboRojo, globo.getX(), globo.getY(), globo.getTamaño(), globo.getTamaño(), this);
+                    break;
+                case "java.awt.Color[r=0,g=0,b=255]": // Azul
+                    g.drawImage(imagenGloboAzul, globo.getX(), globo.getY(), globo.getTamaño(), globo.getTamaño(), this);
+                    break;
+                case "java.awt.Color[r=0,g=255,b=0]": // Verde
+                    g.drawImage(imagenGloboVerde, globo.getX(), globo.getY(), globo.getTamaño(), globo.getTamaño(), this);
+                    break;
+                case "java.awt.Color[r=255,g=255,b=0]": // Amarillo
+                    g.drawImage(imagenGloboAmarillo, globo.getX(), globo.getY(), globo.getTamaño(), globo.getTamaño(), this);
+                    break;
             }
         }
     }
@@ -173,21 +118,12 @@ public class PanelDeCarreraGlobos extends JPanel {
     }
 
     private void mostrarPodio() {
-        int totalGlobos = clasificacion.size();
-        if (totalGlobos < 3) {
-            JOptionPane.showMessageDialog(this, "No hay suficientes globos para el podio.", "Podio", JOptionPane.INFORMATION_MESSAGE);
-            carreraIniciada = false;
-            return;
+        StringBuilder mensaje = new StringBuilder("Clasificación:\n");
+        for (int i = 0; i < clasificacion.size(); i++) {
+            mensaje.append((i + 1)).append("° Lugar: ")
+                    .append(obtenerNombreColor(clasificacion.get(i).getColor())).append("\n");
         }
-        // En la carrera, el último que llega es el ganador (oro),
-        // el penúltimo es plata y el antepenúltimo es bronce.
-        Globo oro = clasificacion.get(totalGlobos - 1);
-        Globo plata = clasificacion.get(totalGlobos - 2);
-        Globo bronce = clasificacion.get(totalGlobos - 3);
-
-        // Mostrar el podio en una ventana modal
-        PodioDialog podio = new PodioDialog(oro, plata, bronce);
-        podio.setVisible(true);
+        JOptionPane.showMessageDialog(this, mensaje.toString(), "Podio", JOptionPane.INFORMATION_MESSAGE);
         carreraIniciada = false; // Permitir reiniciar la carrera
     }
 

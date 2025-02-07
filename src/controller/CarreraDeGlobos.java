@@ -4,9 +4,10 @@ import src.view.PanelDeCarreraGlobos;
 
 import javax.swing.*;
 import java.awt.*;
+import java.io.IOException;
 
 public class CarreraDeGlobos extends JFrame {
-    public CarreraDeGlobos() {
+    public CarreraDeGlobos() throws IOException {
         setTitle("Carrera de Globos");
         setSize(350, 800);
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
@@ -23,7 +24,12 @@ public class CarreraDeGlobos extends JFrame {
 
     public static void main(String[] args) {
         SwingUtilities.invokeLater(() -> {
-            CarreraDeGlobos frame = new CarreraDeGlobos();
+            CarreraDeGlobos frame = null;
+            try {
+                frame = new CarreraDeGlobos();
+            } catch (IOException e) {
+                throw new RuntimeException(e);
+            }
             frame.setVisible(true);
         });
     }
