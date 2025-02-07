@@ -23,17 +23,23 @@ public class PanelDeCarreraGlobos extends JPanel {
     private Image imagenGloboVerde;
     private Image imagenGloboAmarillo;
 
+    // Nueva variable para el fondo, que sustituye al color
+    private Image fondoPro;
+
     public PanelDeCarreraGlobos() {
         setPreferredSize(new Dimension(400, 750)); // Panel vertical
         globos = new ArrayList<>();
         clasificacion = new ArrayList<>();
         techo = new Techo();
 
-        // Cargar las imágenes
+        // Cargar las imágenes de los globos
         imagenGloboAzul = new ImageIcon(getClass().getResource("/src/imagen/GloboAzul.png")).getImage();
-        imagenGloboVerde= new ImageIcon(getClass().getResource("/src/imagen/GloboVerde.png")).getImage();
+        imagenGloboVerde = new ImageIcon(getClass().getResource("/src/imagen/GloboVerde.png")).getImage();
         imagenGloboRojo = new ImageIcon(getClass().getResource("/src/imagen/GloboRojo.png")).getImage();
         imagenGloboAmarillo = new ImageIcon(getClass().getResource("/src/imagen/GloboAmarillo.png")).getImage();
+
+        // Cargar la imagen de fondo (fondoPro.png)
+        fondoPro = new ImageIcon(getClass().getResource("/src/imagen/fondoPro.png")).getImage();
     }
 
     public void iniciarCarrera() {
@@ -85,8 +91,11 @@ public class PanelDeCarreraGlobos extends JPanel {
     @Override
     protected void paintComponent(Graphics g) {
         super.paintComponent(g);
-        setBackground(Color.CYAN);
 
+        // Dibujar el fondo utilizando la imagen fondoPro.png
+        g.drawImage(fondoPro, 0, 0, getWidth(), getHeight(), this);
+
+        // Dibujar el techo y las nubes
         techo.dibujar(g, getWidth());
 
         // Dibujar el techo en la parte superior
@@ -164,12 +173,21 @@ public class PanelDeCarreraGlobos extends JPanel {
     }
 
     private void mostrarPodio() {
-        StringBuilder mensaje = new StringBuilder("Clasificación:\n");
-        for (int i = 0; i < clasificacion.size(); i++) {
-            mensaje.append((i + 1)).append("° Lugar: ")
-                    .append(obtenerNombreColor(clasificacion.get(i).getColor())).append("\n");
+        int totalGlobos = clasificacion.size();
+        if (totalGlobos < 3) {
+            JOptionPane.showMessageDialog(this, "No hay suficientes globos para el podio.", "Podio", JOptionPane.INFORMATION_MESSAGE);
+            carreraIniciada = false;
+            return;
         }
-        JOptionPane.showMessageDialog(this, mensaje.toString(), "Podio", JOptionPane.INFORMATION_MESSAGE);
+        // En la carrera, el último que llega es el ganador (oro),
+        // el penúltimo es plata y el antepenúltimo es bronce.
+        Globo oro = clasificacion.get(totalGlobos - 1);
+        Globo plata = clasificacion.get(totalGlobos - 2);
+        Globo bronce = clasificacion.get(totalGlobos - 3);
+
+        // Mostrar el podio en una ventana modal
+        PodioDialog podio = new PodioDialog(oro, plata, bronce);
+        podio.setVisible(true);
         carreraIniciada = false; // Permitir reiniciar la carrera
     }
 
